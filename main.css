@@ -1,0 +1,175 @@
+body {
+    margin: 0;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    color: #333;
+    background-image: linear-gradient(45deg, #93a5cf 0%, #e4efe9 100%);
+}
+
+*,
+*:before,
+*:after {
+    box-sizing: border-box;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    margin: 0;
+}
+
+
+/*
+hr {
+    display: block;
+    height: 1px;
+    width: 100%;
+    border: 0;
+    margin: 40px 0;
+    
+    background-color: #e5e5e5;
+}
+*/
+
+
+/* Header */
+
+.header {
+    background-image: linear-gradient(to right, #868f96 0%, #596164 100%);
+    height: 50px;
+    position: fixed;
+    width: 100%;
+    left: 0;
+    top: 0;
+    z-index: 100;
+}
+
+.nav {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+}
+
+.fa-cat {
+    position: absolute;
+    z-index: 101;
+    top: 15px;
+    left: 50px;
+}
+
+.header__title {
+    max-width: 20%;
+    color: #B0C4DE;
+    padding-top: 4px;
+    text-transform: uppercase;
+    position: relative;
+    /* margin-top: 5px; */
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.input__search {
+    height: 30px;
+    width: 50%;
+    border-radius: 10px;
+    border: 0;
+    margin: 10px 0;
+    margin-left: 75%;
+}
+
+
+/* Page */
+
+.page {
+    padding-top: 80px;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+
+/* Repo item */
+
+.repo__item {
+    margin-bottom: 30px;
+    width: 60%;
+    margin-left: 20%;
+    display: block;
+    border-radius: 20px;
+    border: 1px solid #333;
+    box-shadow: 5px 5px 3px #333;
+    background: linear-gradient(to bottom, #D5DEE7 0%, #E8EBF2 50%, #E2E7ED 100%), linear-gradient(to bottom, rgba(0, 0, 0, 0.02) 50%, rgba(255, 255, 255, 0.02) 61%, rgba(0, 0, 0, 0.02) 73%), linear-gradient(33deg, rgba(255, 255, 255, 0.20) 0%, rgba(0, 0, 0, 0.20) 100%);
+    background-blend-mode: normal, color-burn;
+}
+
+.repo__item:last-child {
+    margin-bottom: 50px;
+}
+
+.colorized {
+    background-color: lightgray;
+    margin-bottom: 35px;
+}
+
+.rep__title {
+    text-transform: uppercase;
+    margin-left: 16px;
+    position: relative;
+    /* margin-top: 5px; */
+    text-align: left;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.fa-github {
+    padding-top: 8px;
+    position: absolute;
+    /* top: 10%; */
+    left: 28%;
+    z-index: 1;
+}
+
+.rep__stars {
+    text-align: right;
+    font-size: 18px;
+    font-weight: lighter;
+    font-style: italic;
+}
+
+.rep__last--commit {
+    text-align: right;
+    font-size: 18px;
+    font-weight: normal;
+    font-style: italic;
+    color: #596164;
+}
+
+.rep__link {
+    text-align: end;
+    margin-bottom: 10px;
+    display: block;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: bolder;
+    font-style: italic;
+    color: #333;
+}
+
+.rep__link:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+
+/* Container */
+
+.container {
+    padding: 0 15px;
+    width: 100%;
+    max-width: 1230px;
+    margin: 0 auto;
+}
