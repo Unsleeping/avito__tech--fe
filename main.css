@@ -82,9 +82,9 @@ hr {
 }
 
 
-/* Page */
+/* all Page */
 
-.page {
+.all__page {
     padding-top: 80px;
     width: 100%;
     height: 100%;
@@ -172,4 +172,29 @@ hr {
     width: 100%;
     max-width: 1230px;
     margin: 0 auto;
+}
+
+
+/* Paginator */
+
+.repo__item {
+    display: none;
+}
+
+.num {
+    display: none;
+}
+
+.paginator {
+    line-height: 150%;
+}
+
+.paginator>span {
+    display: inline-block;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.paginator_active {
+    color: red;
 }
