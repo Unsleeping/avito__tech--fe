@@ -5,46 +5,7 @@ let repoUL = document.querySelector('.repo__list'),
     arrayLength;
 
 const searchInput = document.querySelector('.input__search'),
-    TOKEN = '9aae9c1f9249c12d94839323b5daac8ba83471a7';
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    TOKEN = '6b1fc6ba003c44e9c98d039f6daa7949b0dac8f0';
 
 const getStars = (url, name, lastCommit, html_url) => {
     let tempObj = {
@@ -63,6 +24,7 @@ const getStars = (url, name, lastCommit, html_url) => {
             if (testCounter === arrayLength - 1) {
                 test(repList);
             }
+            // console.log(JSON.parse(request.response));
             tempObj.stars = JSON.parse(request.response).stargazers_count;
             tempObj.lastCommit = (JSON.parse(request.response).updated_at).slice(0, 10);
             // console.log(tempObj);
@@ -74,7 +36,6 @@ const getStars = (url, name, lastCommit, html_url) => {
     });
     request.send();
 };
-// let pageNum = 1;
 
 const createElement = (item, typeAdding) => {
 
@@ -136,6 +97,43 @@ const createElement = (item, typeAdding) => {
     }
 };
 
+//листаем paginator
+function pagination(event) {
+    const count = 100, //всего записей
+        cnt = 10, //сколько отображаем сначала
+        cnt_page = Math.ceil(count / cnt); //кол-во страниц
+
+    let div_num = document.querySelectorAll(".repo__item");
+    let main_page = document.getElementById("page1");
+    // main_page.classList.add("paginator_active");
+
+    const e = event || window.event;
+    const target = e.target;
+    const id = target.id;
+    console.log('listaem');
+
+    if (target.tagName.toLowerCase() != "span") return;
+
+    const num_ = id.substr(4);
+    const data_page = +target.dataset.page;
+    main_page.classList.remove("paginator_active");
+    main_page = document.getElementById(id);
+    main_page.classList.add("paginator_active");
+
+    let j = 0;
+    for (let i = 0; i < div_num.length; i++) {
+        let data_num = div_num[i].dataset.num;
+        if (data_num <= data_page || data_num >= data_page)
+            div_num[i].style.display = "none";
+
+    }
+    for (let i = data_page; i < div_num.length; i++) {
+        if (j >= cnt) break;
+        div_num[i].style.display = "block";
+        j++;
+    }
+}
+
 const test = (repList) => {
     const request = new XMLHttpRequest(); //use constructor to create request
     url = 'https://api.github.com/repositories';
@@ -147,16 +145,11 @@ const test = (repList) => {
         if (request.status === 200) { //obtain positive data from the server
             // console.log(JSON.parse(request.response));
             const list = JSON.parse(request.response);
+            // console.log(list);
             arrayLength = list.length;
 
             list.forEach((item, i) => {
                 // console.log(item);
-                // tempObj = {
-                //     name: item.name,
-                //     stars: -1,
-                //     lastCommit: (item.updated_at).slice(9),
-                //     url: item.html_url
-                // };
                 getStars(item.url, item.name, item.updated_at, item.html_url);
             });
             repList.sort(function(a, b) {
@@ -201,34 +194,6 @@ const test = (repList) => {
             }
             let main_page = document.getElementById("page1");
             main_page.classList.add("paginator_active");
-
-            //листаем
-            function pagination(event) {
-                const e = event || window.event;
-                const target = e.target;
-                const id = target.id;
-
-                if (target.tagName.toLowerCase() != "span") return;
-
-                const num_ = id.substr(4);
-                const data_page = +target.dataset.page;
-                main_page.classList.remove("paginator_active");
-                main_page = document.getElementById(id);
-                main_page.classList.add("paginator_active");
-
-                let j = 0;
-                for (let i = 0; i < div_num.length; i++) {
-                    let data_num = div_num[i].dataset.num;
-                    if (data_num <= data_page || data_num >= data_page)
-                        div_num[i].style.display = "none";
-
-                }
-                for (let i = data_page; i < div_num.length; i++) {
-                    if (j >= cnt) break;
-                    div_num[i].style.display = "block";
-                    j++;
-                }
-            }
 
 
 
