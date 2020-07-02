@@ -5,7 +5,7 @@ let repoUL = document.querySelector('.repo__list'),
     arrayLength;
 
 const searchInput = document.querySelector('.input__search'),
-    TOKEN = 'f0318f60fd473ed1c7cecb1628ba837e7eb4fde9';
+    TOKEN = '6eb3a802eb01d07c0b19493c0dbbc8cc427f9d45';
 
 const getStars = (url, name, lastCommit, html_url) => {
     let tempObj = {
@@ -110,7 +110,7 @@ const createElement = (item, typeAdding) => {
 const checkActive = (id) => {
     const lst = document.querySelectorAll('.paginator__num');
     lst.forEach(item => {
-        if (item.id !== id) item.style.color = 'black';
+        if (item.id !== id) item.style.color = '#333';
         else item.style.color = 'red';
     })
 };
