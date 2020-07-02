@@ -5,7 +5,7 @@ let repoUL = document.querySelector('.repo__list'),
     arrayLength;
 
 const searchInput = document.querySelector('.input__search'),
-    TOKEN = 'e0f2823cef4637fb14a15d4ec1e4dfac332d8a21';
+    TOKEN = '2b98b3f7be3a47dbcfdc1d454cae3c8d2d11adcc';
 
 const getStars = (url, name, lastCommit, html_url) => {
     let tempObj = {
@@ -37,7 +37,10 @@ const getStars = (url, name, lastCommit, html_url) => {
     request.send();
 };
 
+localStorage.setItem('counterCreation', 1);
+
 const createElement = (item, typeAdding) => {
+
 
     /*
                 <li class="repo__item">
@@ -57,6 +60,8 @@ const createElement = (item, typeAdding) => {
         repContent = document.createElement('div'),
         repLink = document.createElement('a');
 
+    repoItem.setAttribute('data-num', +localStorage.getItem('counterCreation'));
+    localStorage.setItem('counterCreation', +localStorage.getItem('counterCreation') + 1);
     repoItem.classList.add('repo__item');
     repContainer.classList.add('container');
     repoItem.classList.add(`${item.name}`);
@@ -104,32 +109,38 @@ function pagination(event) {
     const count = 100, //всего записей
         cnt = 10; //сколько отображаем
 
-    let id = `page${localStorage.getItem('counter')}`;
-    localStorage.setItem('counter', +localStorage.getItem('counter') + 1);
+
 
     let div_num = document.querySelectorAll(".repo__item");
+    // console.log(div_num);
 
-    let main_page = document.getElementById(id);
-    console.log('1', main_page);
+
     const e = event || window.event;
     const target = e.target;
-    id = target.id;
 
     // main_page.classList.add("paginator_active");
 
     if (target.tagName.toLowerCase() != "span") return;
+
+    let id = `page${localStorage.getItem('counter')}`;
+    localStorage.setItem('counter', +localStorage.getItem('counter') + 1);
+    let main_page = document.getElementById(id);
+    // console.log('1', main_page);
+
+    id = target.id;
 
     const num_ = id.substr(4);
     const data_page = +target.dataset.page;
 
     main_page.classList.remove("paginator_active");
     main_page = document.getElementById(id);
-    console.log('2', main_page);
+    // console.log('2', main_page);
     main_page.classList.add("paginator_active");
 
     let j = 0;
     for (let i = 0; i < div_num.length; i++) {
         let data_num = div_num[i].dataset.num;
+        // console.log(div_num[i].dataset);
         if (data_num <= data_page || data_num >= data_page)
             div_num[i].style.display = "none";
 
@@ -169,7 +180,7 @@ const test = (repList) => {
                 // a должно быть равным b
                 return 0;
             });
-            console.log(repList);
+            // console.log(repList);
             repList.forEach((item, i) => {
                 // if (i >= (pageNum - 1) * 10 && i < (pageNum) * 10)
                 createElement(item, 'begin');
@@ -217,7 +228,7 @@ test(repList);
 
 const checkDupls = (i) => {
     let liItems = document.querySelectorAll('.repo__item');
-    console.log(liItems.length);
+    // console.log(liItems.length);
     liItems.forEach((item, ind) => {
         // console.log(item.classList[1]);
         // console.log(liItems[i].classList[1]);
