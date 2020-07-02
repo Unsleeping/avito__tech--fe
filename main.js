@@ -5,7 +5,7 @@ let repoUL = document.querySelector('.repo__list'),
     arrayLength;
 
 const searchInput = document.querySelector('.input__search'),
-    TOKEN = '6b1fc6ba003c44e9c98d039f6daa7949b0dac8f0';
+    TOKEN = 'e0f2823cef4637fb14a15d4ec1e4dfac332d8a21';
 
 const getStars = (url, name, lastCommit, html_url) => {
     let tempObj = {
@@ -51,6 +51,7 @@ const createElement = (item, typeAdding) => {
                     </div>
                 </li>
     */
+
     let repoItem = document.createElement('li'),
         repContainer = document.createElement('div'),
         repContent = document.createElement('div'),
@@ -97,27 +98,33 @@ const createElement = (item, typeAdding) => {
     }
 };
 
+localStorage.setItem('counter', 1);
 //листаем paginator
 function pagination(event) {
     const count = 100, //всего записей
-        cnt = 10, //сколько отображаем сначала
-        cnt_page = Math.ceil(count / cnt); //кол-во страниц
+        cnt = 10; //сколько отображаем
+
+    let id = `page${localStorage.getItem('counter')}`;
+    localStorage.setItem('counter', +localStorage.getItem('counter') + 1);
 
     let div_num = document.querySelectorAll(".repo__item");
-    let main_page = document.getElementById("page1");
-    // main_page.classList.add("paginator_active");
 
+    let main_page = document.getElementById(id);
+    console.log('1', main_page);
     const e = event || window.event;
     const target = e.target;
-    const id = target.id;
-    console.log('listaem');
+    id = target.id;
+
+    // main_page.classList.add("paginator_active");
 
     if (target.tagName.toLowerCase() != "span") return;
 
     const num_ = id.substr(4);
     const data_page = +target.dataset.page;
+
     main_page.classList.remove("paginator_active");
     main_page = document.getElementById(id);
+    console.log('2', main_page);
     main_page.classList.add("paginator_active");
 
     let j = 0;
