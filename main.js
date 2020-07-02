@@ -5,8 +5,9 @@ let repoUL = document.querySelector('.repo__list'),
     arrayLength;
 
 const searchInput = document.querySelector('.input__search'),
-    TOKEN = '6eb3a802eb01d07c0b19493c0dbbc8cc427f9d45';
+    TOKEN = '1c22174e1c8082987ab3a120d9b9b545e8f40968';
 
+//create repo object and push into repList
 const getStars = (url, name, lastCommit, html_url) => {
     let tempObj = {
         name: name,
@@ -24,10 +25,7 @@ const getStars = (url, name, lastCommit, html_url) => {
             if (testCounter === arrayLength - 1) {
                 test(repList);
             }
-            // console.log(JSON.parse(request.response));
             tempObj.stars = JSON.parse(request.response).stargazers_count;
-            tempObj.lastCommit = (JSON.parse(request.response).updated_at).slice(0, 10);
-            // console.log(tempObj);
             repList.push(tempObj);
             testCounter += 1;
         } else {
@@ -37,13 +35,13 @@ const getStars = (url, name, lastCommit, html_url) => {
     request.send();
 };
 
-localStorage.setItem('counterCreation', 1);
 
+//create creation counter
 window.counterCreation = 1;
 
-const createElement = (item, typeAdding) => {
 
-
+//create repoCard
+const createElement = (item, typeAdding, event) => {
     /*
                 <li class="repo__item">
                     <div class="container">
@@ -62,8 +60,9 @@ const createElement = (item, typeAdding) => {
         repContent = document.createElement('div'),
         repLink = document.createElement('a');
 
-    repoItem.setAttribute('data-num', window.counterCreation);
+    typeAdding === 'begin' ? repoItem.setAttribute('data-num', window.counterCreation) : repoItem.setAttribute('data-num', typeAdding + 1);
     window.counterCreation += 1;
+
 
     repoItem.classList.add('repo__item');
     repContainer.classList.add('container');
@@ -94,19 +93,23 @@ const createElement = (item, typeAdding) => {
     repoItem.insertAdjacentElement('afterbegin', repContainer);
     // console.log(repoItem);
 
-    typeAdding === 'begin' ? repoUL.append(repoItem) : repoUL.insertBefore(repoItem, liFirstChild);
     liFirstChild = document.querySelector('.repo__item');
+
+    typeAdding === 'begin' ? repoUL.append(repoItem) : repoUL.insertBefore(repoItem, liFirstChild);
+
     let liItems = document.querySelectorAll('.repo__item');
 
     if (typeAdding !== 'begin') {
-        // if (typeAdding + 1 <= pageNum * 10 && typeAdding + 1 > (pageNum - 1) * 10) {
+        // console.log(repoUL);
+        repoItem.style.opacity = '.5';
         liItems[typeAdding + 1].remove();
-        // }
-        if (liItems[1].classList.contains('colorized')) liItems[1].classList.remove('colorized');
+        pagination(event)
+        if (liItems[2].classList.contains('colorized')) liItems[2].classList.remove('colorized');
     }
 };
 
 
+//check active page in paginator (recolor another pages)
 const checkActive = (id) => {
     const lst = document.querySelectorAll('.paginator__num');
     lst.forEach(item => {
@@ -116,7 +119,9 @@ const checkActive = (id) => {
 };
 
 
+//create another counter
 window.counter = 1;
+
 
 //листаем paginator
 function pagination(event) {
@@ -159,6 +164,8 @@ function pagination(event) {
     }
 }
 
+
+//obtain repos from the server
 const test = (repList) => {
     const request = new XMLHttpRequest(); //use constructor to create request
     url = 'https://api.github.com/repositories';
@@ -168,13 +175,10 @@ const test = (repList) => {
         if (request.readyState !== 4) return;
 
         if (request.status === 200) { //obtain positive data from the server
-            // console.log(JSON.parse(request.response));
             const list = JSON.parse(request.response);
-            // console.log(list);
             arrayLength = list.length;
 
             list.forEach((item, i) => {
-                // console.log(item);
                 getStars(item.url, item.name, item.updated_at, item.html_url);
             });
             repList.sort(function(a, b) {
@@ -187,12 +191,9 @@ const test = (repList) => {
                 // a должно быть равным b
                 return 0;
             });
-            // console.log(repList);
             repList.forEach((item, i) => {
-                // if (i >= (pageNum - 1) * 10 && i < (pageNum) * 10)
                 createElement(item, 'begin');
             });
-
 
             //Paginator
             const count = 100, //всего записей
@@ -202,27 +203,23 @@ const test = (repList) => {
             //выводим список страниц
             const paginator = document.querySelector(".paginator");
             let page = "";
+
             for (let i = 0; i < cnt_page; i++) {
                 page += "<span class=paginator__num data-page=" + i * cnt + "  id=\"page" + (i + 1) + "\">" + (i + 1) + "</span>";
             }
             paginator.innerHTML = page;
 
-
-
             //выводим первые записи {cnt}
             let div_num = document.querySelectorAll(".repo__item");
-            // console.log(div_num);
+
             for (let i = 0; i < div_num.length; i++) {
                 if (i < cnt) {
                     div_num[i].style.display = "block";
                 }
             }
+
             let main_page = document.getElementById("page1");
             main_page.classList.add("paginator_active");
-
-
-
-
 
         } else {
             console.error(request.status);
@@ -231,34 +228,82 @@ const test = (repList) => {
     request.send();
 };
 
+
 test(repList);
 
-const checkDupls = (i) => {
-    let liItems = document.querySelectorAll('.repo__item');
-    // console.log(liItems.length);
-    liItems.forEach((item, ind) => {
-        // console.log(item.classList[1]);
-        // console.log(liItems[i].classList[1]);
-        if (item.classList[1] === liItems[i].classList[1]) {
-            // liItems[ind].remove();
-            return;
-        }
-    });
-}
+
+// const checkDupls = (i) => {
+//     let liItems = document.querySelectorAll('.repo__item');
+//     // console.log(liItems.length);
+//     liItems.forEach((item, ind) => {
+//         // console.log(item.classList[1]);
+//         // console.log(liItems[i].classList[1]);
+//         if (item.classList[1] === liItems[i].classList[1]) {
+//             // liItems[ind].remove();
+//             return;
+//         }
+//     });
+// }
 
 
+//search repo.name in repos below (works after coming back on that page in this version)
 searchInput.addEventListener('input', () => {
     let lst = [];
-
 
     repList.forEach((item, i) => {
         lst.push(item.name)
     });
 
     if (lst.includes(searchInput.value)) {
-        createElement(repList[lst.indexOf(searchInput.value)], lst.indexOf(searchInput.value));
-        checkDupls(lst.indexOf(searchInput.value));
+        console.log(lst.indexOf(searchInput.value));
+        createElement(repList[lst.indexOf(searchInput.value)], lst.indexOf(searchInput.value), event);
+        // checkDupls(lst.indexOf(searchInput.value));
     }
+});
 
 
+//create repoCard after click  (works only in console in this version)
+window.addEventListener('click', (event) => {
+    const lstCard = ['rep__last--commit', 'rep__stars', 'rep__link', 'rep__title']
+    repList = repList.slice(0, 100);
+    let repoFind = [];
+
+    if (!lstCard.includes(event.target.className)) return;
+
+    repList.forEach(item => {
+        if (item.name === event.path[3].className.split(' ')[1]) {
+            repoFind.push(item.url.slice(19, ));
+        }
+    });
+
+    const findUrlPath = repoFind[0];
+    const url = 'https://api.github.com/repos/' + `${findUrlPath}`;
+
+    if (findUrlPath === undefined) return;
+
+    const request = new XMLHttpRequest();
+    request.open('GET', url);
+    request.setRequestHeader('Authorization', `token ${TOKEN}`);
+    request.addEventListener('readystatechange', () => {
+        if (request.readyState !== 4) return;
+        if (request.status === 200) {
+            const repo = JSON.parse(request.response);
+            // console.log(repo);
+            let tempObj = {
+                name: repo.name,
+                stars: repo.stargazers_count,
+                lastCommit: repo.updated_at,
+                photo: repo.owner.avatar_url,
+                nickname: 0,
+                userlink: 0,
+                languages: repo.language,
+                description: repo.description,
+                contributers: 0
+            }
+            console.log(tempObj);
+        } else {
+            console.error(request.status);
+        };
+    });
+    request.send();
 });
