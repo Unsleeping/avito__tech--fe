@@ -1,19 +1,19 @@
+import TOKEN from './config.js';
+
 let repoUL = document.querySelector('.repo__list'),
-    liFirstChild = document.querySelector('.repo__item'),
     repList = [],
     testCounter = 0,
     arrayLength;
 
-const searchInput = document.querySelector('.input__search');
-
-import TOKEN from './config.js';
+const searchInput = document.querySelector('.input__search'),
+    paginatorDiv = document.querySelector('.paginator');
 
 //create repo object and push into repList
-const getStars = (url, name, lastCommit, html_url) => {
+const getStars = (url, name, html_url) => {
     let tempObj = {
         name: name,
         stars: -1,
-        lastCommit: lastCommit,
+        lastCommit: -1,
         url: html_url
     };
     const request = new XMLHttpRequest();
@@ -26,7 +26,9 @@ const getStars = (url, name, lastCommit, html_url) => {
             if (testCounter === arrayLength - 1) {
                 test(repList);
             }
-            tempObj.stars = JSON.parse(request.response).stargazers_count;
+            const resp = JSON.parse(request.response);
+            tempObj.lastCommit = resp.updated_at
+            tempObj.stars = resp.stargazers_count;
             repList.push(tempObj);
             testCounter += 1;
         } else {
@@ -81,7 +83,7 @@ const createElement = (item, typeAdding, event) => {
 
     let dataContent = `
     <div class="rep__stars"><i class="far fa-star"></i> : ${item.stars}</div>
-    <div class="rep__last--commit">Updated: ${item.lastCommit}</div>
+    <div class="rep__last--commit">Updated: ${item.lastCommit.slice(0, 10)}</div>
     <a class="rep__link" href='${item.url}' target='_blank'>${item.url}</a>
     
     `;
@@ -94,14 +96,13 @@ const createElement = (item, typeAdding, event) => {
     repoItem.insertAdjacentElement('afterbegin', repContainer);
     // console.log(repoItem);
 
-    liFirstChild = document.querySelector('.repo__item');
+    const liFirstChild = document.querySelector('.repo__item');
 
     typeAdding === 'begin' ? repoUL.append(repoItem) : repoUL.insertBefore(repoItem, liFirstChild);
 
     let liItems = document.querySelectorAll('.repo__item');
 
     if (typeAdding !== 'begin') {
-        // console.log(repoUL);
         repoItem.style.opacity = '.5';
         liItems[typeAdding + 1].remove();
         pagination(event)
@@ -126,8 +127,7 @@ window.counter = 1;
 
 //листаем paginator
 function pagination(event) {
-    const count = 100, //всего записей
-        cnt = 10; //сколько отображаем
+    const cnt = 10; //сколько отображаем
 
     let div_num = document.querySelectorAll(".repo__item");
 
@@ -143,7 +143,6 @@ function pagination(event) {
 
     id = target.id;
 
-    const num_ = id.substr(4);
     const data_page = +target.dataset.page;
 
     checkActive(id);
@@ -179,8 +178,8 @@ const test = (repList) => {
             const list = JSON.parse(request.response);
             arrayLength = list.length;
 
-            list.forEach((item, i) => {
-                getStars(item.url, item.name, item.updated_at, item.html_url);
+            list.forEach((item) => {
+                getStars(item.url, item.name, item.html_url);
             });
             repList.sort(function(a, b) {
                 if (a.stars > b.stars) {
@@ -192,7 +191,7 @@ const test = (repList) => {
                 // a должно быть равным b
                 return 0;
             });
-            repList.forEach((item, i) => {
+            repList.forEach((item) => {
                 createElement(item, 'begin');
             });
 
@@ -247,11 +246,14 @@ test(repList);
 // }
 
 
+paginatorDiv.addEventListener('click', (event) => pagination(event));
+
+
 //search repo.name in repos below (works after coming back on that page in this version)
 searchInput.addEventListener('input', () => {
     let lst = [];
 
-    repList.forEach((item, i) => {
+    repList.forEach((item) => {
         lst.push(item.name)
     });
 
