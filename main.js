@@ -4,8 +4,9 @@ let repoUL = document.querySelector('.repo__list'),
     testCounter = 0,
     arrayLength;
 
-const searchInput = document.querySelector('.input__search'),
-    TOKEN = '1c22174e1c8082987ab3a120d9b9b545e8f40968';
+const searchInput = document.querySelector('.input__search');
+
+import TOKEN from './config.js';
 
 //create repo object and push into repList
 const getStars = (url, name, lastCommit, html_url) => {
@@ -168,7 +169,7 @@ function pagination(event) {
 //obtain repos from the server
 const test = (repList) => {
     const request = new XMLHttpRequest(); //use constructor to create request
-    url = 'https://api.github.com/repositories';
+    const url = 'https://api.github.com/repositories';
     request.open('GET', url); // obtain data from the server and send there our url
     request.setRequestHeader('Authorization', `token ${TOKEN}`);
     request.addEventListener('readystatechange', () => {
@@ -288,7 +289,7 @@ window.addEventListener('click', (event) => {
         if (request.readyState !== 4) return;
         if (request.status === 200) {
             const repo = JSON.parse(request.response);
-            // console.log(repo);
+            console.log(repo);
             let tempObj = {
                 name: repo.name,
                 stars: repo.stargazers_count,
